@@ -312,54 +312,6 @@ echo "You can continue with other steps and come back to configure APIM later."
 
 Create three separate Function projects or use the provided code files.
 
-**Project Structure:**
-```
-backend/
-├── WebApi/
-│   ├── GetMessagesFunction.cs
-│   ├── CreateMessageFunction.cs
-│   └── WebApi.csproj
-├── MessageReader/
-│   ├── MessageReaderFunction.cs
-│   └── MessageReader.csproj
-└── ApiProcessor/
-    ├── ApiProcessorFunction.cs
-    └── ApiProcessor.csproj
-```
-
-### Step 2: Create .csproj Files
-
-**WebApi.csproj:**
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <AzureFunctionsVersion>v4</AzureFunctionsVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-</Project>
-```
-
-**MessageReader.csproj and ApiProcessor.csproj:**
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <AzureFunctionsVersion>v4</AzureFunctionsVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.18.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-</Project>
-```
-
 ### Step 3: Deploy Functions
 
 ```bash
@@ -421,6 +373,8 @@ npm install axios
 Create `.env` file in your React project root:
 
 ```env
+AZURE_SUBSCRIPTION_ID=<your-subscription-id>>
+AZURE_TENANT_ID=<your-tenant-id>
 REACT_APP_API_URL=https://your-function-app.azurewebsites.net/api
 REACT_APP_FUNCTION_KEY=<subscription-key-from-APIM>
 ```
@@ -489,9 +443,28 @@ In Azure Portal, add these policies to your API:
 **Inbound Policy:**
 ```xml
 <policies>
-    <inbound>
-        <base />
-        <rate-limit-by-key calls="1000" renewal-period="3600" counter-key="@(context.Request.IpAddress)" />
+     <inbound>
+        <!-- Handle browser preflight requests first -->
+        <choose>
+            <when condition="@(context.Request.Method == "OPTIONS")">
+                <return-response>
+                    <set-status code="200" reason="OK" />
+                    <set-header name="Access-Control-Allow-Origin" exists-action="override">
+                        <value>https://YOUR-STATIC-WEB-APP-URL</value>
+                    </set-header>
+                    <set-header name="Access-Control-Allow-Methods" exists-action="override">
+                        <value>GET, POST, OPTIONS</value>
+                    </set-header>
+                    <set-header name="Access-Control-Allow-Headers" exists-action="override">
+                        <value>Ocp-Apim-Subscription-Key, Content-Type, Accept</value>
+                    </set-header>
+                    <set-header name="Access-Control-Allow-Credentials" exists-action="override">
+                        <value>true</value>
+                    </set-header>
+                </return-response>
+            </when>
+        </choose>
+        <!-- Now add your main CORS policy for real requests -->
         <cors allow-credentials="true">
             <allowed-origins>
                 <origin>https://YOUR-STATIC-WEB-APP-URL</origin>
@@ -499,11 +472,16 @@ In Azure Portal, add these policies to your API:
             <allowed-methods>
                 <method>GET</method>
                 <method>POST</method>
+                <method>OPTIONS</method>
             </allowed-methods>
             <allowed-headers>
-                <header>*</header>
+                <header>Ocp-Apim-Subscription-Key</header>
+                <header>Content-Type</header>
+                <header>Accept</header>
             </allowed-headers>
         </cors>
+        <base />
+        <!-- Existing header logic -->
         <set-header name="X-Forwarded-For" exists-action="override">
             <value>@(context.Request.IpAddress)</value>
         </set-header>
@@ -520,34 +498,7 @@ In Azure Portal, add these policies to your API:
 </policies>
 ```
 
-## Part 5: Monitoring Setup
-
-### Step 1: Create Dashboard
-
-```bash
-
-cd backend
-# Create a basic monitoring dashboard
-az deployment group create \
-  --resource-group $RESOURCE_GROUP \
-  --template-file ./dashboard-template.json
-```
-
-### Step 2: Configure Alerts
-
-```bash
-# Create action group for notifications
-az monitor action-group create \
-  --resource-group $RESOURCE_GROUP \
-  --name "SMS-Alerts" \
-  --short-name "SMSAlerts" \
-  --email-receiver name=AlertEmail address=your-email@example.com
-
-# Create alert for high queue depth
-# (Do this via Azure Portal for easier configuration)
-```
-
-## Part 6: Verification and Testing
+## Part 5: Verification and Testing
 
 ### Step 1: Verify All Components
 
@@ -664,8 +615,10 @@ az group delete \
 1. **Configure CI/CD** with GitHub Actions or Azure DevOps
 2. **Add authentication** to APIs using Azure AD
 3. **Enable private endpoints** for enhanced security
-4. **Set up staging environment** for testing
-5. **Configure backup and disaster recovery**
+4. **Implement rate limiting** to prevent abuse
+5. **Implement Azure Key Vault** for sensitive data
+6. **Set up staging environment** for testing
+7. **Configure backup and disaster recovery**
 
 ## Support
 

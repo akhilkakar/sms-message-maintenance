@@ -7,7 +7,7 @@
 ![C#](https://img.shields.io/badge/C%23-Language-239120.svg)
 ![React](https://img.shields.io/badge/React-18-blue.svg)
 
-A scalable, cloud-native SMS message processing platform built on Microsoft Azure.
+A scalable, cloud-native SMS message maintenance platform built on Microsoft Azure.
 
 ## Overview
 
@@ -25,7 +25,7 @@ This solution processes SMS messages asynchronously through a third-party API, h
 ## Architecture
 
 ```
-Web App (React) → API Management → Azure Functions → Azure SQL
+Web App (React) → API Management → Azure Functions → Azure SQL Server
                                          ↓
                                   Storage Queue
                                          ↓
@@ -61,20 +61,14 @@ Web App (React) → API Management → Azure Functions → Azure SQL
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/akhilkakar/sms-messaging-system.git
+   git clone https://github.com/akhilkakar/sms-message-maintenance.git
    ```
    ```bash
-   cd sms-messaging-system
+   cd sms-message-maintenance
    ```
 
 2. **Deploy Azure infrastructure**
    Follow the detailed steps in `DEPLOYMENT_GUIDE.md`.
-   ```bash
-   cd deployment
-   ```
-   ```bash
-   ./deploy-infrastructure.sh
-   ```
 
 3. **Deploy backend functions**
    ```bash
@@ -111,7 +105,7 @@ Web App (React) → API Management → Azure Functions → Azure SQL
 ## Project Structure
 
 ```
-sms-messaging-system/
+sms-message-maintenance/
 ├── docs/
 │   └── SMS_Messaging_System_Design.md    # Comprehensive architecture document
 ├── backend/
@@ -147,7 +141,7 @@ sms-messaging-system/
 
 ### 2. API Processor Function
 - **Trigger**: Storage Queue
-- **Purpose**: Calls third-party SMS API and updates status
+- **Purpose**: Calls third-party SMS API and updates status. (Simulated)
 - **Scaling**: Auto-scales based on queue depth
 
 ### 3. Web API Functions
@@ -158,8 +152,7 @@ sms-messaging-system/
 
 ### 4. React Frontend
 - **Features**: Search, filter, sort, pagination
-- **Responsive**: Mobile and desktop optimized
-- **Real-time**: Auto-refreshes search results
+- **Responsive**: Mobile and desktop optimised
 
 ## Configuration
 
@@ -175,7 +168,10 @@ APPINSIGHTS_INSTRUMENTATIONKEY=<your-instrumentation-key>
 ### Environment Variables (React)
 
 ```
+AZURE_SUBSCRIPTION_ID=<your-subscription-id>>
+AZURE_TENANT_ID=<your-tenant-id>
 REACT_APP_API_URL=<your-apim-or-function-url>
+REACT_APP_API_KEY=<your-function-key> for Web API function
 ```
 
 ## Monitoring
@@ -217,7 +213,7 @@ Search and retrieve messages with pagination.
 - `search` - Search term (min 3 characters)
 - `page` - Page number (default: 1)
 - `pageSize` - Results per page (default: 20, max: 100)
-- `sortBy` - Sort field (id, status, createdDateTime, modifiedDateTime)
+- `sortBy` - Sort field (id, message, status, createdDateTime, modifiedDateTime)
 - `sortOrder` - Sort direction (asc, desc)
 
 **Response:**
@@ -242,36 +238,19 @@ Create a new message.
 **Request Body:**
 ```json
 {
-  "to": "0456789012",
-  "from": "0445566778",
+  "to": "1456789012",
+  "from": "2445566778",
   "message": "You are simply awesome!"
 }
 ```
 
-## Cost Estimation
-
-**Monthly Costs (10,000 messages/day):**
-- Azure SQL Database (S2): $75
-- Azure Functions: $10
-- Storage Account: $3
-- API Management: $3-5
-- Application Insights: $12
-- **Total: ~$103/month**
-
 ## Security
 
 - TLS 1.2 encryption for all communications
-- Managed Identity for service-to-service authentication
-- Private endpoints for database access
+- IP whitelisting for database access for privacy
+- Transparent data encryption for Azure SQL Database
 - Rate limiting via API Management
 - SQL injection protection via parameterised queries
-
-## Performance
-
-- **Throughput**: 3,000 messages/hour peak
-- **Latency**: <10 minutes from creation to delivery
-- **Availability**: 99.5%+ uptime
-- **Database**: <100ms query response time
 
 ## Testing
 
@@ -285,12 +264,6 @@ dotnet test
 ```bash
 cd frontend
 npm test
-```
-
-### Integration Tests
-```bash
-# Run end-to-end tests
-./scripts/run-e2e-tests.sh
 ```
 
 ## Troubleshooting
