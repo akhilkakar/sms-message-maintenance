@@ -1,0 +1,280 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/azuredeploy.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Portal/dashboards",
+      "apiVersion": "2020-09-01-preview",
+      "name": "sms-messaging-system-dashboard",
+      "location": "australiaeast",
+      "tags": { "hidden-title": "Sms Message Maintenance Dashboard" },
+      "properties": {
+        "lenses": [
+          {
+            "order": 0,
+            "parts": [
+              {
+                "position": { "x": 0, "y": 0, "rowSpan": 3, "colSpan": 12 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MarkdownPart",
+                  "settings": {
+                    "content": {
+                      "settings": {
+                        "content": "## 📊 Sms Message Maintenance Dashboard\nUnified observability for API Gateway, Function Apps, Storage Queues, and SQL Database.\n_Last 24 hours_"
+                      }
+                    }
+                  }
+                }
+              },
+
+              // === API Management ===
+              {
+                "position": { "x": 0, "y": 3, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.ApiManagement/service/apim-sms-messaging"
+                    },
+                    { "name": "chartTitle", "value": "APIM Total Requests" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.ApiManagement/service", "metricName": "TotalRequests" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 4, "y": 3, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.ApiManagement/service/apim-sms-messaging"
+                    },
+                    { "name": "chartTitle", "value": "APIM Failed Requests (%)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.ApiManagement/service", "metricName": "FailedRequests" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 8, "y": 3, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.ApiManagement/service/apim-sms-messaging"
+                    },
+                    { "name": "chartTitle", "value": "APIM Average Latency (ms)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.ApiManagement/service", "metricName": "GatewayLatency" }
+                      ]
+                    }
+                  ]
+                }
+              },
+
+              // === Function App ===
+              {
+                "position": { "x": 0, "y": 7, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Web/sites/func-web-api-6236"
+                    },
+                    { "name": "chartTitle", "value": "Function Executions" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Web/sites", "metricName": "FunctionExecutionCount" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 4, "y": 7, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Web/sites/func-web-api-6236"
+                    },
+                    { "name": "chartTitle", "value": "Function Failures" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Web/sites", "metricName": "Errors" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 8, "y": 7, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Web/sites/func-web-api-6236"
+                    },
+                    { "name": "chartTitle", "value": "Function Avg Duration (ms)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Web/sites", "metricName": "AverageResponseTime" }
+                      ]
+                    }
+                  ]
+                }
+              },
+
+              // === Azure Storage Queue ===
+              {
+                "position": { "x": 0, "y": 11, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Storage/storageAccounts/sasmsmessaging14526/queueServices/default/queues/message-processing"
+                    },
+                    { "name": "chartTitle", "value": "Queue Message Count" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Storage/storageAccounts/queueServices", "metricName": "QueueMessageCount" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 4, "y": 11, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Storage/storageAccounts/sasmsmessaging14526/queueServices/default/queues/message-processing"
+                    },
+                    { "name": "chartTitle", "value": "Queue Egress (Dequeue Requests)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Storage/storageAccounts/queueServices", "metricName": "Egress" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 8, "y": 11, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Storage/storageAccounts/sasmsmessaging14526/queueServices/default/queues/message-processing"
+                    },
+                    { "name": "chartTitle", "value": "Queue Availability (%)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Storage/storageAccounts/queueServices", "metricName": "Availability" }
+                      ]
+                    }
+                  ]
+                }
+              },
+
+              // === SQL Database ===
+              {
+                "position": { "x": 0, "y": 15, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Sql/servers/sqlserver-sms-messaging/databases/sqldb-messages"
+                    },
+                    { "name": "chartTitle", "value": "SQL DTU (%)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Sql/servers/databases", "metricName": "dtu_consumption_percent" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 4, "y": 15, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Sql/servers/sqlserver-sms-messaging/databases/sqldb-messages"
+                    },
+                    { "name": "chartTitle", "value": "SQL CPU (%)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Sql/servers/databases", "metricName": "cpu_percent" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "position": { "x": 8, "y": 15, "rowSpan": 4, "colSpan": 4 },
+                "metadata": {
+                  "type": "Extension/HubsExtension/PartType/MetricsChartPart",
+                  "inputs": [
+                    {
+                      "name": "resourceId",
+                      "value": "/subscriptions/d4891c49-f033-44f1-b014-629901579f5d/resourceGroups/rg-sms-messaging/providers/Microsoft.Sql/servers/sqlserver-sms-messaging/databases/sqldb-messages"
+                    },
+                    { "name": "chartTitle", "value": "SQL Storage (GB)" },
+                    {
+                      "name": "metrics",
+                      "value": [
+                        { "metricNamespace": "Microsoft.Sql/servers/databases", "metricName": "storage_used" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "metadata": {
+          "model": {
+            "timeRange": {
+              "value": { "relative": { "duration": 24, "timeUnit": 1 } },
+              "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+            },
+            "filterLocale": "en-us"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+# ============================================
+# Sms Message Maintenance - Root .gitignore
+# ============================================
+
+# ============================================
+# Azure Functions - Backend
+# ============================================
+
+# Azure Functions local settings (CONTAINS SECRETS!)
+**/local.settings.json
+local.settings.*.json
+
+# Azure Functions build output
+bin/
+obj/
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Azure Functions local storage
+__blobstorage__/
+__queuestorage__/
+__azurite_db*.json
+.azurite/
+
+# Function app publish profiles
+*.PublishSettings
+*.pubxml
+*.publishproj
+
+# NuGet packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options
+.vs/
+.vscode/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# ============================================
+# React Frontend
+# ============================================
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+*.lcov
+
+# Production build
+/build
+/dist
+/.next/
+/out/
+
+# Environment variables (CONTAINS SECRETS!)
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# React specific
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ============================================
+# Documentation & IDE
+# ============================================
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# Azure & Cloud
+# ============================================
+
+# Azure CLI
+.azure/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+
+# ============================================
+# Database & Secrets
+# ============================================
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets and credentials
+**/appsettings.Development.json
+**/appsettings.Local.json
+*.pfx
+*.pem
+*.key
+secrets.json
+credentials.json
+
+# ============================================
+# Keep These Files (Exceptions)
+# ============================================
+
+# Keep example/template files
+!local.settings.example.json
+!.env.example
+!appsettings.example.json
+
+# Keep .gitkeep files to preserve empty directories
+!.gitkeep
+
+# Keep documentation
+!README.md
+!CONTRIBUTING.md
+!LICENSE

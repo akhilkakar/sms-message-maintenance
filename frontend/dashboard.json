@@ -1,0 +1,52 @@
+{
+  "properties": {
+    "lenses": [
+      {
+        "order": 0,
+        "metadata": {},
+        "parts": [
+          {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "settings": {
+                    "content": "# Sms Message Maintenance Dashboard\n\nWelcome to the Sms Message Maintenance monitoring dashboard.",
+                    "title": "Overview",
+                    "subtitle": ""
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "model": {
+        "timeRange": {
+          "value": {
+            "relative": {
+              "duration": 24,
+              "timeUnit": 1
+            }
+          },
+          "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+        }
+      }
+    }
+  },
+  "name": "Sms Message Maintenance Dashboard",
+  "type": "Microsoft.Portal/dashboards",
+  "location": "eastus",
+  "tags": {
+    "hidden-title": "Sms Message Maintenance Dashboard"
+  }
+}
