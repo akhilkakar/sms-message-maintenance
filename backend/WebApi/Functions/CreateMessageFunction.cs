@@ -91,6 +91,7 @@ namespace SmsMessageMaintenanceFunctions
 
         /// <summary>
         /// Parses incoming request and determines format (JSON, Query String, or Form-Data)
+        /// IMPORTANT: Check Content-Type FIRST before falling back to Query String
         /// </summary>
         private async Task<MessageDto?> ParseRequestAsync(HttpRequestData req)
         {
@@ -102,32 +103,33 @@ namespace SmsMessageMaintenanceFunctions
 
                 _logger.LogInformation($"Processing request with Content-Type: {contentType}");
 
-                // 1. Check for Query String parameters (can work with any method)
-                if (req.Query.Count > 0)
-                {
-                    _logger.LogInformation("Parsing data from Query String");
-                    return ParseFromQueryString(req.Query);
-                }
-
-                // 2. Check for JSON (application/json)
+                // 1. Check for JSON (application/json) - PRIORITY
                 if (contentType?.Contains("application/json") == true)
                 {
                     _logger.LogInformation("Parsing data from JSON body");
                     return await ParseFromJson(req);
                 }
 
-                // 3. Check for Form-Data (application/x-www-form-urlencoded)
+                // 2. Check for Form-Data (application/x-www-form-urlencoded)
                 if (contentType?.Contains("application/x-www-form-urlencoded") == true)
                 {
                     _logger.LogInformation("Parsing data from Form-Data (URL encoded)");
                     return await ParseFromFormData(req);
                 }
 
-                // 4. Check for Multipart Form-Data (multipart/form-data)
+                // 3. Check for Multipart Form-Data (multipart/form-data)
                 if (contentType?.Contains("multipart/form-data") == true)
                 {
                     _logger.LogInformation("Parsing data from Multipart Form-Data");
                     return await ParseFromMultipartFormData(req);
+                }
+
+                // 4. LAST RESORT: Check for Query String parameters (excluding 'code' which is auth)
+                // Only use query string if there are actual message parameters (to, from, message)
+                if (HasMessageQueryParams(req.Query))
+                {
+                    _logger.LogInformation("Parsing data from Query String");
+                    return ParseFromQueryString(req.Query);
                 }
 
                 _logger.LogWarning("Unsupported Content-Type or no data provided");
@@ -138,6 +140,17 @@ namespace SmsMessageMaintenanceFunctions
                 _logger.LogError($"Error parsing request: {ex.Message}");
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Check if query string has actual message parameters (not just auth codes)
+        /// </summary>
+        private bool HasMessageQueryParams(System.Collections.Specialized.NameValueCollection query)
+        {
+            // Check if any of the required message fields exist in query string
+            return !string.IsNullOrEmpty(query["to"]) || 
+                   !string.IsNullOrEmpty(query["from"]) || 
+                   !string.IsNullOrEmpty(query["message"]);
         }
 
         /// <summary>
