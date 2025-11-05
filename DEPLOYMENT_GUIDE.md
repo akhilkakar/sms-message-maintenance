@@ -290,7 +290,7 @@ az functionapp cors add \
 ```bash
 # Note: APIM takes 30-45 minutes to provision
 APIM_NAME="apim-sms-messaging"
-APIM_PUBLISHER_EMAIL="akhil.recreation+smsmessaging@gmail.com"  # Change this!
+APIM_PUBLISHER_EMAIL="youremailaddress@example.com"  # Change this!
 APIM_PUBLISHER_NAME="Akhil Kakar"  # Change this!
 
 # Create API Management (Consumption tier for cost savings)
@@ -401,7 +401,7 @@ swa deploy ./build \
   --env development
 ```
 
-### Step 4: Configure CORS for Production
+### Step 4: Configure CORS
 
 ```bash
 # Get Static Web App URL
