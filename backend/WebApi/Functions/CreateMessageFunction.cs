@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -145,11 +149,22 @@ namespace SmsMessageMaintenanceFunctions
         {
             try
             {
+                var to = query["to"];
+                var from = query["from"];
+                var message = query["message"];
+
+                // Validate required fields
+                if (string.IsNullOrEmpty(to) || string.IsNullOrEmpty(from) || string.IsNullOrEmpty(message))
+                {
+                    _logger.LogWarning("Missing required fields in query string");
+                    return null;
+                }
+
                 return new MessageDto
                 {
-                    To = query["to"],
-                    From = query["from"],
-                    Message = query["message"]
+                    To = to,
+                    From = from,
+                    Message = message
                 };
             }
             catch (Exception ex)
@@ -192,11 +207,22 @@ namespace SmsMessageMaintenanceFunctions
 
                 var formData = HttpUtility.ParseQueryString(body);
                 
+                var to = formData["to"];
+                var from = formData["from"];
+                var message = formData["message"];
+
+                // Validate required fields
+                if (string.IsNullOrEmpty(to) || string.IsNullOrEmpty(from) || string.IsNullOrEmpty(message))
+                {
+                    _logger.LogWarning("Missing required fields in form data");
+                    return null;
+                }
+
                 return new MessageDto
                 {
-                    To = formData["to"],
-                    From = formData["from"],
-                    Message = formData["message"]
+                    To = to,
+                    From = from,
+                    Message = message
                 };
             }
             catch (Exception ex)
@@ -222,21 +248,27 @@ namespace SmsMessageMaintenanceFunctions
                 {
                     return null;
                 }
-
-                var messageDto = new MessageDto();
                 
                 // Extract form fields from multipart data
-                // This is a basic implementation - enhance for production use
                 var fields = ParseMultipartFields(body);
                 
-                if (fields.ContainsKey("to"))
-                    messageDto.To = fields["to"];
-                if (fields.ContainsKey("from"))
-                    messageDto.From = fields["from"];
-                if (fields.ContainsKey("message"))
-                    messageDto.Message = fields["message"];
+                var to = fields.ContainsKey("to") ? fields["to"] : null;
+                var from = fields.ContainsKey("from") ? fields["from"] : null;
+                var message = fields.ContainsKey("message") ? fields["message"] : null;
 
-                return messageDto;
+                // Validate required fields
+                if (string.IsNullOrEmpty(to) || string.IsNullOrEmpty(from) || string.IsNullOrEmpty(message))
+                {
+                    _logger.LogWarning("Missing required fields in multipart form data");
+                    return null;
+                }
+
+                return new MessageDto
+                {
+                    To = to,
+                    From = from,
+                    Message = message
+                };
             }
             catch (Exception ex)
             {
@@ -262,8 +294,8 @@ namespace SmsMessageMaintenanceFunctions
                 if (part.Contains("Content-Disposition"))
                 {
                     var lines = part.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                    string fieldName = null;
-                    string fieldValue = null;
+                    string? fieldName = null;
+                    string? fieldValue = null;
 
                     foreach (var line in lines)
                     {
